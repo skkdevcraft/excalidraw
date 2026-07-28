@@ -1,12 +1,19 @@
 services:
+  drawcloudflaretunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    environment:
+      - TUNNEL_TOKEN=$DRAW_TUNNEL_TOKEN
+    command: tunnel --no-autoupdate run
+
   excalidraw:
     build:
       context: .
       args:
         - NODE_ENV=development
     container_name: excalidraw
-    ports:
-      - "3000:80"
+    # ports:
+    #   - "3000:80"
     restart: on-failure
     stdin_open: true
     healthcheck:
