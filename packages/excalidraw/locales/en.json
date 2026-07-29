@@ -110,6 +110,8 @@
     "ungroup": "Ungroup selection",
     "collaborators": "Collaborators",
     "toggleGrid": "Toggle grid",
+    "toggleNotebookMode": "Toggle notebook mode",
+    "toggleCalligraphyMode": "Toggle calligraphy mode",
     "addToLibrary": "Add to library",
     "removeFromLibrary": "Remove from library",
     "libraryLoadingMessage": "Loading library…",

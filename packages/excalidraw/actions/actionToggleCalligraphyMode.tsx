@@ -1,35 +1,32 @@
-import { CODES, KEYS } from "@excalidraw/common";
-
 import { CaptureUpdateAction } from "@excalidraw/element";
 
 import { gridIcon } from "../components/icons";
 
 import { register } from "./register";
 
-export const actionToggleGridMode = register({
-  name: "gridMode",
+export const actionToggleCalligraphyMode = register({
+  name: "calligraphyMode",
   icon: gridIcon,
-  keywords: ["snap"],
-  label: "labels.toggleGrid",
+  keywords: ["calligraphy", "grid"],
+  label: "labels.toggleCalligraphyMode",
   viewMode: true,
   trackEvent: {
     category: "canvas",
-    predicate: (appState) => appState.gridModeEnabled,
+    predicate: (appState) => appState.gridType === "calligraphy",
   },
   perform(elements, appState) {
     return {
       appState: {
         ...appState,
-        gridModeEnabled: !this.checked!(appState),
-        gridType: "grid",
+        gridModeEnabled: true,
+        gridType: "calligraphy",
         objectsSnapModeEnabled: false,
       },
       captureUpdate: CaptureUpdateAction.EVENTUALLY,
     };
   },
-  checked: (appState) => appState.gridModeEnabled,
+  checked: (appState) => appState.gridType === "calligraphy",
   predicate: (element, appState, props) => {
-    return props.gridModeEnabled === undefined;
+    return true;
   },
-  keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.code === CODES.QUOTE,
 });
