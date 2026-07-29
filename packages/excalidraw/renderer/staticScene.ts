@@ -167,7 +167,8 @@ const strokeNotebookGrid = (
   // Double margin vertical lines every gridStep cells
   if (gridStep > 1) {
     for (let x = offsetX; x < offsetX + width + gridSize * 2; x += gridSize) {
-      const isMargin = Math.round(x - scrollX) % (gridStep * 10 * gridSize) === 0;
+      const isMargin =
+        Math.round(x - scrollX) % (gridStep * 10 * gridSize) === 0;
       if (isMargin) {
         const lineWidth = Math.min(1.5 / zoom.value, 1.5);
         context.lineWidth = lineWidth;
@@ -225,8 +226,8 @@ const strokeCalligraphyGrid = (
     context.setLineDash([]);
     context.strokeStyle = GridLineColor[theme].regular;
     context.beginPath();
-    context.moveTo(offsetX - gridSize - lineDx, y);
-    context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
+    context.moveTo(offsetX - gridSize, y);
+    context.lineTo(Math.ceil(offsetX + width + gridSize * 2 + lineDx), y);
     context.stroke();
   }
 
@@ -235,8 +236,8 @@ const strokeCalligraphyGrid = (
   const yBottom = offsetY + height + gridSize;
 
   for (
-    let x = offsetX - gridSize - lineDx;
-    x < offsetX + width + gridSize * 2;
+    let x = offsetX - gridSize;
+    x < offsetX + width + gridSize * 2 + lineDx;
     x += gridSize
   ) {
     const isBold =
@@ -251,7 +252,7 @@ const strokeCalligraphyGrid = (
 
     context.beginPath();
     context.moveTo(x, yTop);
-    context.lineTo(x + lineDx, yBottom);
+    context.lineTo(x - lineDx, yBottom);
     context.stroke();
   }
 
@@ -397,7 +398,7 @@ const _renderStaticScene = ({
 
   // Grid
   if (renderGrid) {
-    strokeCalligraphyGrid(
+    strokeGrid(
       context,
       appState.gridSize,
       appState.gridStep,
