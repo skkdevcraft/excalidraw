@@ -11,6 +11,8 @@ import {
   actionShortcuts,
   actionToggleArrowBinding,
   actionToggleGridMode,
+  actionToggleNotebookMode,
+  actionToggleCalligraphyMode,
   actionToggleMidpointSnapping,
   actionToggleObjectsSnapMode,
   actionToggleSearchMenu,
@@ -544,6 +546,44 @@ export const PreferencesToggleGridModeItem = () => {
   );
 };
 
+export const PreferencesToggleNotebookModeItem = () => {
+  const { t } = useI18n();
+  const actionManager = useExcalidrawActionManager();
+  const appState = useUIAppState();
+
+  return (
+    <DropdownMenuItemCheckbox
+      checked={appState.gridType === "notebook"}
+      shortcut={getShortcutFromShortcutName("notebookMode")}
+      onSelect={(event) => {
+        actionManager.executeAction(actionToggleNotebookMode);
+        event.preventDefault();
+      }}
+    >
+      {t("labels.toggleNotebookMode")}
+    </DropdownMenuItemCheckbox>
+  );
+};
+
+export const PreferencesToggleCalligraphyModeItem = () => {
+  const { t } = useI18n();
+  const actionManager = useExcalidrawActionManager();
+  const appState = useUIAppState();
+
+  return (
+    <DropdownMenuItemCheckbox
+      checked={appState.gridType === "calligraphy"}
+      shortcut={getShortcutFromShortcutName("calligraphyMode")}
+      onSelect={(event) => {
+        actionManager.executeAction(actionToggleCalligraphyMode);
+        event.preventDefault();
+      }}
+    >
+      {t("labels.toggleCalligraphyMode")}
+    </DropdownMenuItemCheckbox>
+  );
+};
+
 export const PreferencesToggleZenModeItem = () => {
   const { t } = useI18n();
   const actionManager = useExcalidrawActionManager();
@@ -621,6 +661,8 @@ export const Preferences = ({
             <PreferencesToggleToolLockItem />
             <PreferencesToggleSnapModeItem />
             <PreferencesToggleGridModeItem />
+            <PreferencesToggleNotebookModeItem />
+            <PreferencesToggleCalligraphyModeItem />
             <PreferencesToggleZenModeItem />
             <PreferencesToggleViewModeItem />
             <PreferencesToggleElementPropertiesItem />
@@ -640,6 +682,8 @@ Preferences.ToggleSnapMode = PreferencesToggleSnapModeItem;
 Preferences.ToggleArrowBinding = PreferencesToggleArrowBindingItem;
 Preferences.ToggleMidpointSnapping = PreferencesToggleMidpointSnappingItem;
 Preferences.ToggleGridMode = PreferencesToggleGridModeItem;
+Preferences.ToggleNotebookMode = PreferencesToggleNotebookModeItem;
+Preferences.ToggleCalligraphyMode = PreferencesToggleCalligraphyModeItem;
 Preferences.ToggleZenMode = PreferencesToggleZenModeItem;
 Preferences.ToggleViewMode = PreferencesToggleViewModeItem;
 Preferences.ToggleElementProperties = PreferencesToggleElementPropertiesItem;

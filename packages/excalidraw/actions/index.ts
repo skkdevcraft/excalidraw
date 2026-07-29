@@ -77,6 +77,8 @@ export {
 } from "./actionClipboard";
 
 export { actionToggleGridMode } from "./actionToggleGridMode";
+export { actionToggleNotebookMode } from "./actionToggleNotebookMode";
+export { actionToggleCalligraphyMode } from "./actionToggleCalligraphyMode";
 export { actionToggleZenMode } from "./actionToggleZenMode";
 export { actionToggleObjectsSnapMode } from "./actionToggleObjectsSnapMode";
 export { actionToggleArrowBinding } from "./actionToggleArrowBinding";
