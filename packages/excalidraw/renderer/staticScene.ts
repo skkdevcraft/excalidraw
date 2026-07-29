@@ -130,6 +130,134 @@ const strokeGrid = (
   context.restore();
 };
 
+const strokeNotebookGrid = (
+  context: CanvasRenderingContext2D,
+  /** grid cell pixel size */
+  gridSize: number,
+  /** every N-th vertical position gets a double margin line (e.g. 20) */
+  gridStep: number,
+  scrollX: number,
+  scrollY: number,
+  zoom: Zoom,
+  theme: StaticCanvasRenderConfig["theme"],
+  width: number,
+  height: number,
+) => {
+  const offsetX = (scrollX % gridSize) - gridSize;
+  const offsetY = (scrollY % gridSize) - gridSize;
+
+  context.save();
+
+  if (zoom.value === 1) {
+    context.translate(offsetX % 1 ? 0 : 0.5, offsetY % 1 ? 0 : 0.5);
+  }
+
+  // Horizontal lines (solid, like notebook paper)
+  for (let y = offsetY; y < offsetY + height + gridSize * 2; y += gridSize) {
+    const lineWidth = Math.min(1 / zoom.value, 1);
+    context.lineWidth = lineWidth;
+    context.setLineDash([]);
+    context.strokeStyle = GridLineColor[theme].regular;
+    context.beginPath();
+    context.moveTo(offsetX - gridSize, y);
+    context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
+    context.stroke();
+  }
+
+  // Double margin vertical lines every gridStep cells
+  if (gridStep > 1) {
+    for (let x = offsetX; x < offsetX + width + gridSize * 2; x += gridSize) {
+      const isMargin = Math.round(x - scrollX) % (gridStep * 10 * gridSize) === 0;
+      if (isMargin) {
+        const lineWidth = Math.min(1.5 / zoom.value, 1.5);
+        context.lineWidth = lineWidth;
+        context.setLineDash([]);
+        context.strokeStyle = "#ff6b6b";
+
+        const gap = 1.5 / zoom.value;
+        context.beginPath();
+        context.moveTo(x - gap, offsetY - gridSize);
+        context.lineTo(x - gap, Math.ceil(offsetY + height + gridSize * 2));
+        context.stroke();
+        context.beginPath();
+        context.moveTo(x + gap, offsetY - gridSize);
+        context.lineTo(x + gap, Math.ceil(offsetY + height + gridSize * 2));
+        context.stroke();
+      }
+    }
+  }
+
+  context.restore();
+};
+
+const strokeCalligraphyGrid = (
+  context: CanvasRenderingContext2D,
+  /** grid cell pixel size */
+  gridSize: number,
+  /** every N-th slanted line is drawn bolder */
+  gridStep: number,
+  scrollX: number,
+  scrollY: number,
+  zoom: Zoom,
+  theme: StaticCanvasRenderConfig["theme"],
+  width: number,
+  height: number,
+) => {
+  const offsetX = (scrollX % gridSize) - gridSize;
+  const offsetY = (scrollY % gridSize) - gridSize;
+
+  // Slant angle from horizontal (55° is common for italic/calligraphy practice)
+  const slantAngle = 55;
+  const slantRad = (slantAngle * Math.PI) / 180;
+  const slope = Math.tan(slantRad);
+  const lineDx = (height + gridSize * 2) / slope;
+
+  context.save();
+
+  if (zoom.value === 1) {
+    context.translate(offsetX % 1 ? 0 : 0.5, offsetY % 1 ? 0 : 0.5);
+  }
+
+  // Horizontal lines (solid)
+  for (let y = offsetY; y < offsetY + height + gridSize * 2; y += gridSize) {
+    const lineWidth = Math.min(1 / zoom.value, 1);
+    context.lineWidth = lineWidth;
+    context.setLineDash([]);
+    context.strokeStyle = GridLineColor[theme].regular;
+    context.beginPath();
+    context.moveTo(offsetX - gridSize - lineDx, y);
+    context.lineTo(Math.ceil(offsetX + width + gridSize * 2), y);
+    context.stroke();
+  }
+
+  // Slanted lines (parallel, at the calligraphy angle)
+  const yTop = offsetY - gridSize;
+  const yBottom = offsetY + height + gridSize;
+
+  for (
+    let x = offsetX - gridSize - lineDx;
+    x < offsetX + width + gridSize * 2;
+    x += gridSize
+  ) {
+    const isBold =
+      gridStep > 1 && Math.round(x - scrollX) % (gridStep * gridSize) === 0;
+
+    const lineWidth = Math.min(1 / zoom.value, isBold ? 2 : 1);
+    context.lineWidth = lineWidth;
+    context.setLineDash([]);
+    context.strokeStyle = isBold
+      ? GridLineColor[theme].bold
+      : GridLineColor[theme].regular;
+
+    context.beginPath();
+    context.moveTo(x, yTop);
+    context.lineTo(x + lineDx, yBottom);
+    context.stroke();
+  }
+
+  context.restore();
+};
+
 export const frameClip = (
   frame: ExcalidrawFrameLikeElement,
   context: CanvasRenderingContext2D,
@@ -269,7 +397,7 @@ const _renderStaticScene = ({
 
   // Grid
   if (renderGrid) {
-    strokeGrid(
+    strokeCalligraphyGrid(
       context,
       appState.gridSize,
       appState.gridStep,
