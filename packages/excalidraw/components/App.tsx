@@ -803,6 +803,7 @@ class App extends React.Component<AppProps, AppState> {
       viewModeEnabled = false,
       zenModeEnabled = false,
       gridModeEnabled = false,
+      gridType = null,
       objectsSnapModeEnabled = false,
       theme = defaultAppState.theme,
       name = `${t("labels.untitled")}-${getDateTime()}`,
@@ -838,6 +839,7 @@ class App extends React.Component<AppProps, AppState> {
       zenModeEnabled,
       objectsSnapModeEnabled,
       gridModeEnabled: gridModeEnabled ?? defaultAppState.gridModeEnabled,
+      gridType: gridType ?? defaultAppState.gridType,
       name,
       width: window.innerWidth,
       height: window.innerHeight,
@@ -2566,6 +2568,7 @@ class App extends React.Component<AppProps, AppState> {
                               imageCache: this.imageCache,
                               isExporting: false,
                               renderGrid: isGridModeEnabled(this),
+                              gridType: this.state.gridType,
                               renderLinks: this.isLinksEnabled(),
                               canvasBackgroundColor:
                                 this.state.viewBackgroundColor,
@@ -2590,6 +2593,7 @@ class App extends React.Component<AppProps, AppState> {
                                 imageCache: this.imageCache,
                                 isExporting: false,
                                 renderGrid: false,
+                                gridType: undefined,
                                 canvasBackgroundColor:
                                   this.state.viewBackgroundColor,
                                 embedsValidationStatus:

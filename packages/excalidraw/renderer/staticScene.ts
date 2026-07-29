@@ -376,7 +376,7 @@ const _renderStaticScene = ({
     return;
   }
 
-  const { renderGrid = true, isExporting } = renderConfig;
+  const { renderGrid = true, gridType, isExporting } = renderConfig;
 
   const [normalizedWidth, normalizedHeight] = getNormalizedCanvasDimensions(
     canvas,
@@ -398,7 +398,14 @@ const _renderStaticScene = ({
 
   // Grid
   if (renderGrid) {
-    strokeGrid(
+    const gridFn =
+      gridType === "notebook"
+        ? strokeNotebookGrid
+        : gridType === "calligraphy"
+        ? strokeCalligraphyGrid
+        : strokeGrid;
+
+    gridFn(
       context,
       appState.gridSize,
       appState.gridStep,

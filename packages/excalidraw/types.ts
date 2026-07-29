@@ -207,6 +207,7 @@ export type StaticCanvasAppState = Readonly<
     selectedElementsAreBeingDragged: AppState["selectedElementsAreBeingDragged"];
     gridSize: AppState["gridSize"];
     gridStep: AppState["gridStep"];
+    gridType: AppState["gridType"];
     frameRendering: AppState["frameRendering"];
     currentHoveredFontFamily: AppState["currentHoveredFontFamily"];
     hoveredElementIds: AppState["hoveredElementIds"];
@@ -475,6 +476,7 @@ export interface AppState {
   gridSize: number;
   gridStep: number;
   gridModeEnabled: boolean;
+  gridType: GridType | null;
   viewModeEnabled: boolean;
 
   /** top-most selected groups (i.e. does not include nested groups) */
@@ -872,6 +874,7 @@ export interface ExcalidrawProps {
     | { type: "custom"; customType: string };
   zenModeEnabled?: boolean;
   gridModeEnabled?: boolean;
+  gridType?: GridType | null;
   objectsSnapModeEnabled?: boolean;
   libraryReturnUrl?: string;
   theme?: Theme;
@@ -1306,6 +1309,8 @@ export type EmbedsValidationStatus = Map<
 export type ElementsPendingErasure = Set<ExcalidrawElement["id"]>;
 
 export type PendingExcalidrawElements = NonDeletedExcalidrawElement[];
+
+export type GridType = "grid" | "notebook" | "calligraphy";
 
 /** Runtime gridSize value. Null indicates disabled grid. */
 export type NullableGridSize =

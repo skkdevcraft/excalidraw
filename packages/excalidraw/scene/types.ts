@@ -17,6 +17,7 @@ import type {
   StaticCanvasAppState,
   SocketId,
   PendingExcalidrawElements,
+  GridType,
 } from "../types";
 import type { RoughCanvas } from "roughjs/bin/canvas";
 import type { Drawable } from "roughjs/bin/core";
@@ -30,6 +31,7 @@ export type StaticCanvasRenderConfig = {
   // ---------------------------------------------------------------------------
   imageCache: AppClassProperties["imageCache"];
   renderGrid: boolean;
+  gridType: GridType | null | undefined;
   /** whether to render link icons on elements with links (never rendered
    when exporting). @default true */
   renderLinks?: boolean;
