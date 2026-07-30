@@ -1216,7 +1216,7 @@ const getVariableWidthFreedrawOutline = (
     thinning: VARIABLE_WIDTH_FREEDRAW.THINNING,
     smoothing: VARIABLE_WIDTH_FREEDRAW.SMOOTHING,
     streamline: getFreedrawStreamline(element),
-    easing: (t) => Math.sin((t * Math.PI) / 2) * 2.0, // https://easings.net/#easeOutSine
+    easing: (t) => 0.2 + Math.sin((t * Math.PI) / 2) * (t * t) * 2.0, // https://easings.net/#easeOutSine
     last: true,
   }) as [number, number][];
 };
