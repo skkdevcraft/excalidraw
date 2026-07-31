@@ -44,6 +44,7 @@ import { SAVE_TO_LOCAL_STORAGE_TIMEOUT, STORAGE_KEYS } from "../app_constants";
 import { FileManager } from "./FileManager";
 import { FileStatusStore } from "./fileStatusStore";
 import { Locker } from "./Locker";
+import { localStorageSetElements } from "./localStorage";
 import { updateBrowserStateVersion } from "./tabSync";
 
 const filesStore = createStore("files-db", "files-store");
@@ -87,10 +88,7 @@ const saveDataStateToLocalStorage = (
       _appState.openSidebar = null;
     }
 
-    localStorage.setItem(
-      STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS,
-      JSON.stringify(getNonDeletedElements(elements)),
-    );
+    localStorageSetElements(getNonDeletedElements(elements));
     localStorage.setItem(
       STORAGE_KEYS.LOCAL_STORAGE_APP_STATE,
       JSON.stringify(_appState),

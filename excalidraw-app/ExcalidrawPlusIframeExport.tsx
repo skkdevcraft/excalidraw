@@ -10,6 +10,7 @@ import type { AppState, BinaryFileData } from "@excalidraw/excalidraw/types";
 
 import { STORAGE_KEYS } from "./app_constants";
 import { LocalData } from "./data/LocalData";
+import { localStorageGetElementsRaw, parseElements } from "./data/localStorage";
 
 const EVENT_REQUEST_SCENE = "REQUEST_SCENE";
 
@@ -51,9 +52,8 @@ const parseSceneData = async ({
   }
 
   try {
-    const elements = JSON.parse(
-      rawElementsString,
-    ) as OrderedExcalidrawElement[];
+    const elements =
+      parseElements<OrderedExcalidrawElement[]>(rawElementsString);
 
     if (!elements.length) {
       throw new ExcalidrawError("Scene is empty, nothing to export.");
@@ -179,9 +179,7 @@ export const ExcalidrawPlusIframeExport = () => {
             rawAppStateString: localStorage.getItem(
               STORAGE_KEYS.LOCAL_STORAGE_APP_STATE,
             ),
-            rawElementsString: localStorage.getItem(
-              STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS,
-            ),
+            rawElementsString: localStorageGetElementsRaw(),
           });
 
           event.source!.postMessage(parsedSceneData, {

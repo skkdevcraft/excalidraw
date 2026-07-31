@@ -18,6 +18,7 @@ import type { ExcalidrawElement } from "@excalidraw/element/types";
 import type { AllPossibleKeys } from "@excalidraw/common/utility-types";
 
 import { STORAGE_KEYS } from "../../../excalidraw-app/app_constants";
+import { localStorageSetElements } from "../../../excalidraw-app/data/localStorage";
 
 import { Pointer, UI } from "./helpers/ui";
 import * as toolQueries from "./queries/toolQueries";
@@ -133,10 +134,7 @@ export class GlobalTestState {
 
 const initLocalStorage = (data: ImportedDataState) => {
   if (data.elements) {
-    localStorage.setItem(
-      STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS,
-      JSON.stringify(data.elements),
-    );
+    localStorageSetElements(data.elements);
   }
   if (data.appState) {
     localStorage.setItem(

@@ -1,3 +1,5 @@
+import { getNonDeletedElements } from "@excalidraw/element";
+
 import {
   clearAppStateForLocalStorage,
   getDefaultAppState,
@@ -7,6 +9,45 @@ import type { ExcalidrawElement } from "@excalidraw/element/types";
 import type { AppState } from "@excalidraw/excalidraw/types";
 
 import { STORAGE_KEYS } from "../app_constants";
+
+export const stringifyElements = (
+  elements: readonly ExcalidrawElement[],
+): string => JSON.stringify(elements);
+
+export const parseElements = <T = ExcalidrawElement[]>(raw: string): T =>
+  JSON.parse(raw);
+
+export const localStorageGetElementsRaw = (): string | null => {
+  try {
+    return localStorage.getItem(STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS);
+  } catch (error: any) {
+    // Unable to access localStorage
+    console.error(error);
+    return null;
+  }
+};
+
+export const localStorageGetElements = (): ExcalidrawElement[] | null => {
+  const raw = localStorageGetElementsRaw();
+  if (!raw) {
+    return null;
+  }
+  try {
+    return parseElements<ExcalidrawElement[]>(raw);
+  } catch (error: any) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const localStorageSetElements = (
+  elements: readonly ExcalidrawElement[],
+) => {
+  localStorage.setItem(
+    STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS,
+    stringifyElements(getNonDeletedElements(elements)),
+  );
+};
 
 export const saveUsernameToLocalStorage = (username: string) => {
   try {
@@ -35,26 +76,16 @@ export const importUsernameFromLocalStorage = (): string | null => {
 };
 
 export const importFromLocalStorage = () => {
-  let savedElements = null;
   let savedState = null;
 
   try {
-    savedElements = localStorage.getItem(STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS);
     savedState = localStorage.getItem(STORAGE_KEYS.LOCAL_STORAGE_APP_STATE);
   } catch (error: any) {
     // Unable to access localStorage
     console.error(error);
   }
 
-  let elements: ExcalidrawElement[] = [];
-  if (savedElements) {
-    try {
-      elements = JSON.parse(savedElements);
-    } catch (error: any) {
-      console.error(error);
-      // Do nothing because elements array is already empty
-    }
-  }
+  const elements = localStorageGetElements() ?? [];
 
   let appState = null;
   if (savedState) {
@@ -74,14 +105,7 @@ export const importFromLocalStorage = () => {
 };
 
 export const getElementsStorageSize = () => {
-  try {
-    const elements = localStorage.getItem(STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS);
-    const elementsSize = elements?.length || 0;
-    return elementsSize;
-  } catch (error: any) {
-    console.error(error);
-    return 0;
-  }
+  return localStorageGetElementsRaw()?.length ?? 0;
 };
 
 export const getTotalStorageSize = () => {
