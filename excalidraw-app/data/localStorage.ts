@@ -10,12 +10,9 @@ import type { AppState } from "@excalidraw/excalidraw/types";
 
 import { STORAGE_KEYS } from "../app_constants";
 
-export const stringifyElements = (
-  elements: readonly ExcalidrawElement[],
-): string => JSON.stringify(elements);
+import { parseElements, stringifyElements } from "./elementSerialization";
 
-export const parseElements = <T = ExcalidrawElement[]>(raw: string): T =>
-  JSON.parse(raw);
+export { parseElements, stringifyElements };
 
 export const localStorageGetElementsRaw = (): string | null => {
   try {
